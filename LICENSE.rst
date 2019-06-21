@@ -1,4 +1,4 @@
-visaplan.plone.staticthumbnails Copyright 2019, Tobias Herp
+visaplan.plone.staticthumbnails Copyright 2019, visaplan GmbH, Germany
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License version 2

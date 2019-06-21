@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*- vim: et ts=8 sw=4 sts=4 si tw=79 cc=+1
-"""Installer for the visaplan.PACKAGE package."""
+"""Installer for the visaplan.plone.staticthumbnails package."""
 
 from setuptools import find_packages
 from setuptools import setup
@@ -13,7 +13,7 @@ except ImportError:
     from ConfigParser import ConfigParser
 # ---------------------------------------- ] ... destination locking ]
 
-package_name = 'visaplan.PACKAGE'
+package_name = 'visaplan.plone.staticthumbnails'
 
 # -------------------------------------------- [ get the version ... [
 def read_version(fn, sfn):
@@ -160,7 +160,7 @@ long_description = '\n\n'.join([
     open('CHANGES.rst').read(),
 ])
 
-# see as well --> src/visaplan/PACKAGE/configure.zcml:
+# see as well --> src/visaplan/plone/staticthumbnails/configure.zcml:
 exclude_subpackages = (
         )
 exclude_packages = []
@@ -194,7 +194,7 @@ setup_kwargs = dict(
     # keywords='Python Plone',
     author='Tobias Herp',
     author_email='tobias.herp@visaplan.com',
-    url='https://pypi.org/project/visaplan.PACKAGE',
+    url='https://pypi.org/project/visaplan.plone.staticthumbnails',
     license='GPL version 2',
     packages=packages,
     namespace_packages=[

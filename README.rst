@@ -2,24 +2,33 @@
    If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
    This text does not appear on pypi or github. It is a comment.
 
-=====================
-visaplan.PACKAGE
-=====================
+===============================
+visaplan.plone.staticthumbnails
+===============================
 
-Tell me what your product does
+This Plone add-on adds "static" thumbnails to content objects; the idea is
 
-The purpose of this package is *not* to provide new functionality
-but to factor out existing functionality from an existing monolitic Zope product.
-Thus, it is more likely to lose functionality during further development
-(as parts of it will be forked out into their own packages,
-or some functionality may even become obsolete because there are better
-alternatives in standard Plone components).
+- to make thumbnail images available even for objects the user can't access
+  (e.g. for object listings which include restricted but offered objects)
+
+- since the Zope permissions system is bypassed anyway, the front-end webserver
+  can quite as well serve those images itself;
+
+- thus, the thumbnails are written to the filesystem.
 
 
 Features
 --------
 
-- Can be bullet points
+- Provides a mixin class `IStaticThumbnails`
+- which features the `getThumbnailPath` method.
+- This method checks the date and time of the image in the ``image`` property
+  and creates any missing thumbnail image in the filesystem
+- before returning the TTW path to this image file,
+- which usually follows the pattern `/++thumbnail++/<UUID>`.
+- It is not normally executed during the common web requests but only when
+  the object is reindexed; thus, the TTW path to the thumbnail image is
+  available as catalog metadata.
 
 
 Examples
@@ -49,14 +58,14 @@ This product has been translated into
 Installation
 ------------
 
-Install visaplan.PACKAGE by adding it to your buildout::
+Install visaplan.plone.staticthumbnails by adding it to your buildout::
 
     [buildout]
 
     ...
 
     eggs =
-        visaplan.PACKAGE
+        visaplan.plone.staticthumbnails
 
 
 and then running ``bin/buildout``
@@ -65,8 +74,8 @@ and then running ``bin/buildout``
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/visaplan/visaplan.PACKAGE/issues
-- Source Code: https://github.com/visaplan/visaplan.PACKAGE
+- Issue Tracker: https://github.com/visaplan/visaplan.plone.staticthumbnails/issues
+- Source Code: https://github.com/visaplan/visaplan.plone.staticthumbnails
 - Documentation: https://docs.plone.org/foo/bar
 
 
@@ -81,8 +90,7 @@ License
 -------
 
 The project is licensed under the GPLv2.
-The project is licensed under the Apache Software License.
 
-.. _`issue tracker`: https://github.com/visaplan/PACKAGE/issues
+.. _`issue tracker`: https://github.com/visaplan/plone.staticthumbnails/issues
 
 .. vim: tw=79 cc=+1 sw=4 sts=4 si et
