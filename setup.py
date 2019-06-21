@@ -115,6 +115,7 @@ setup_kwargs = dict(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'visaplan.plone.behaviors',
         # -*- Extra requirements: -*-
         'plone.api',
         'Products.GenericSetup>=1.8.2',
