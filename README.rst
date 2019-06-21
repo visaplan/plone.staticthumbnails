@@ -66,8 +66,8 @@ and then running ``bin/buildout``
 Contribute
 ----------
 
-- Issue Tracker: https://github.com/visaplan/visaplan.plone.staticthumbnails/issues
-- Source Code: https://github.com/visaplan/visaplan.plone.staticthumbnails
+- Issue Tracker: https://github.com/visaplan/plone.staticthumbnails/issues
+- Source Code: https://github.com/visaplan/plone.staticthumbnails
 
 
 Support
