@@ -1,4 +1,5 @@
 graft src/visaplan
 graft docs
 include *.rst
-global-exclude *.pyc
+include VERSION*
+global-exclude *.pyc *~ .*.swp .*.swo
