@@ -9,23 +9,27 @@ class IVisaplanPloneStaticthumbnailsLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 # ------------------------------- [ options for getThumbnailPath ... [
-class IDedicatedThumbnail(Interface):
+class IThumbnail(Interface):
+    """ Support static thumbnails somehow
+    """
+
+class IDedicatedThumbnail(IThumbnail):
     """ Take thumbnail from the image attribute
     """
 
-class IThumbnailFromText(Interface):
+class IThumbnailFromText(IThumbnail):
     """ Take thumbnail from the first mentioned image in text
     """
 
-class IThumbnailFromFirstImage(Interface):
+class IThumbnailFromFirstImage(IThumbnail):
     """ Take thumbnail from the first image here (for folders)
     """
 
-class IThumbnailFromPage(Interface):
+class IThumbnailFromPage(IThumbnail):
     """ Take thumbnail from the configured default page
     """
 
-class IVoidThumbnail(Interface):
+class IVoidThumbnail(IThumbnail):
     """ There is no meaningful thumbnail
     """
 # ------------------------------- ] ... options for getThumbnailPath ]
