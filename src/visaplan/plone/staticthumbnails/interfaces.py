@@ -2,6 +2,7 @@
 """Module where all interfaces, events and exceptions live."""
 
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.interface import Interface
 
 
 class IVisaplanPloneStaticthumbnailsLayer(IDefaultBrowserLayer):
