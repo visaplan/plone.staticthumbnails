@@ -44,15 +44,7 @@ This add-on can be seen in action at the following sites:
 Documentation
 -------------
 
-Full documentation for end users can be found in the "docs" folder.
-
-
-Translations
-------------
-
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
+Sorry, we don't have real user documentation yet.
 
 
 Installation
@@ -76,7 +68,6 @@ Contribute
 
 - Issue Tracker: https://github.com/visaplan/visaplan.plone.staticthumbnails/issues
 - Source Code: https://github.com/visaplan/visaplan.plone.staticthumbnails
-- Documentation: https://docs.plone.org/foo/bar
 
 
 Support
