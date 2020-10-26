@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*- vim: et ts=8 sw=4 sts=4 si tw=79 cc=+1
 """Installer for the visaplan.plone.staticthumbnails package."""
+# Python compatibility:
+from __future__ import absolute_import, print_function
 
-from setuptools import find_packages
-from setuptools import setup
+# Setup tools:
+from setuptools import find_packages, setup
+
+# Standard library:
 from os.path import isfile
 
 package_name = 'visaplan.plone.staticthumbnails'
@@ -23,7 +27,7 @@ def valid_suffix(suffix):
     suffix = suffix.strip()
     if not suffix:
         return suffix
-    allowed = set('.dev0123456789')
+    allowed = set('.dev0123456789rc')
     disallowed = set(suffix).difference(allowed)
     if disallowed:
         disallowed = ''.join(sorted(disallowed))
@@ -81,18 +85,67 @@ for subp in exclude_subpackages:
 packages = find_packages(
             'src',
             exclude=exclude_packages)
+
+def github_urls(package, **kwargs):
+    pop = kwargs.pop
+    pkg_list = package.split('.')
+    res = {}
+    readthedocs = pop('readthedocs', False)
+    if readthedocs:
+        if readthedocs in (1, True):
+            readthedocs = ''.join(pkg_list)
+        res['Documentation'] = \
+            'https://%(readthedocs)s.readthedocs.io' % locals()
+        assert 'docs' not in kwargs
+    else:
+        docs = pop('docs', None)
+        if docs is None:
+            res['Documentation'] = 'https://pypi.org/project/%(package)s' \
+                                   % locals()
+        elif docs:
+            res['Documentation'] = docs
+    if not pop('github', 1):
+        assert not kwargs
+        return res
+    pop_user = pop('pop_user', False)
+    if pop_user:
+        assert 'pick_user' not in kwargs
+        assert 'user' not in kwargs
+        user = pkg_list.pop(0)
+        package = '.'.join(pkg_list)
+    else:
+        pick_user = pop('pick_user', 'user' not in kwargs)
+        if pick_user:
+            user = pkg_list[0]
+            if 'user' in kwargs:
+                assert pop('user') == user
+    if pop('travis', False):  # reqires github to be trueish
+        res.update({  # CHECKME: is there a de-facto standard key for this?
+            'Tests': 'https://travis-ci.org/%(user)s/%(package)s' % locals()
+            })
+    base = 'https://github.com/%(user)s/%(package)s' % locals()
+    res.update({
+        'Source': base,
+        'Tracker': base + '/issues',
+        })
+    return res
+project_urls = github_urls(package_name,
+                           pop_user=0)  # or pick_user=1, or github=0
 # ------------------------------------------- ] ... for setup_kwargs ]
 
 setup_kwargs = dict(
     name=package_name,
     version=VERSION,
-    description="PACKAGE for UNITRACC",
+    description='A Plone add-on'
+    ' which adds "static" thumbnails to content objects',
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     # Get more from https://pypi.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: 4.3",
+        'Framework :: Zope2',
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Intended Audience :: Developers",
@@ -103,7 +156,7 @@ setup_kwargs = dict(
     # keywords='Python Plone',
     author='Tobias Herp',
     author_email='tobias.herp@visaplan.com',
-    url='https://pypi.org/project/visaplan.plone.staticthumbnails',
+    project_urls=project_urls,
     license='GPL version 2',
     packages=packages,
     namespace_packages=[
@@ -115,20 +168,38 @@ setup_kwargs = dict(
     zip_safe=False,
     install_requires=[
         'setuptools',
+        'six',
         'visaplan.plone.behaviors',
         # -*- Extra requirements: -*-
         'plone.api',
         'Products.GenericSetup>=1.8.2',
-        'z3c.jbot',
+        # we currently don't use the "Just a bunch of templates" product:
+        # 'z3c.jbot',
+        # checked requirements (from imports):
+        "plone.app.upgrade",
+        "visaplan.kitchen",
+        "visaplan.plone.tools",
+        "visaplan.tools",
+        "zope.i18nmessageid",
+        "zope.interface",
+        "zope.publisher",
+        "Products.CMFCore",
+        "Products.CMFPlone",
+        "Products.unitracc",
+        # imported by test code:
+        "plone.browserlayer",
     ],
     extras_require={
         'test': [
             'plone.app.testing',
-            # Plone KGS does not use this version, because it would break
-            # Remove if your package shall be part of coredev.
-            # plone_coredev tests as of 2016-04-01.
-            'plone.testing>=5.0.0',
-            'plone.app.robotframework[debug]',
+            # imported by test code:
+            'plone.app.dexterity',
+            'Pillow',
+            # plone.app.robotframework 1.2.0 requires plone.testing 4.0.11; 
+            # plone.app.robotframework 1.3+ drops Plone 4.3 compatibility:
+            'plone.testing',
+            # currently disabled because of import problems: 
+            # 'plone.app.robotframework[debug]',
         ],
     },
     entry_points="""

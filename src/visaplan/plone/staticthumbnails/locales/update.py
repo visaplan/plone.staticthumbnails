@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import os
-import pkg_resources
-import subprocess
+# Python compatibility:
+from __future__ import absolute_import
 
+# Setup tools:
+import pkg_resources
+
+# Standard library:
+import os
+import subprocess
 
 domain = 'visaplan.plone.staticthumbnails'
 os.chdir(pkg_resources.resource_filename(domain, ''))

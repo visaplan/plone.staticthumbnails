@@ -1,44 +1,56 @@
 # -*- coding: utf-8 -*-
-# Standardmodule
-from urlparse import urlunsplit
-from urllib import urlencode
-from os import getcwd
-from os.path import normpath, join, abspath
-from StringIO import StringIO
+# Python compatibility:
+from __future__ import absolute_import
+
+from six import string_types as six_string_types
+from six.moves import map
+from six.moves.urllib.parse import urlencode, urlunsplit
+
+# Standard library:
 from collections import defaultdict
+from os import getcwd
+from os.path import abspath, join, normpath
 
+# Zope:
 from Products.CMFCore.utils import getToolByName
+from zope.interface import implements
 
+# 3rd party:
+from PIL.Image import BILINEAR  # Empfehlung von RL
+from PIL.Image import ANTIALIAS, CUBIC, LINEAR, Image
+from PIL.Image import open as open_image  # "Resampling-Filter":
+from StringIO import StringIO
 
-from PIL.Image import (Image, open as open_image,
-        # "Resampling-Filter":
-        ANTIALIAS, LINEAR, CUBIC,
-        BILINEAR,  # Empfehlung von RL
-        )
-
-# Unitracc-Tools:
+# visaplan:
 from visaplan.kitchen.spoons import extract_1st_image_info
-from visaplan.tools.debug import pp, log_or_trace
-from visaplan.tools.files import make_mtime_checker
 from visaplan.plone.tools.context import message
-from visaplan.plone.tools.log import getLogSupport
+from visaplan.tools.files import make_mtime_checker
 from visaplan.tools.minifuncs import gimme_False
-logger, debug_active, DEBUG = getLogSupport()
+
+# Logging / Debugging:
+from visaplan.plone.tools.log import getLogSupport
+from visaplan.tools.debug import log_or_trace, pp
+
+logger, debug_active, DEBUG = getLogSupport(defaultFromDevMode=1)
 
 logger.warning('TODO: find a clean way to detect the var/ directory')
 try:
+    # visaplan:
     from Products.unitracc.tools.info import VAR_ROOT
 except ImportError:
-    from os.path import dirname, pardir, join, normpath
+    # Standard library:
+    from os.path import dirname, join, normpath, pardir
     from sys import executable
     logger.warning('Using sys.executable %(executable)r', locals())
     VAR_ROOT = join(dirname(executable), pardir, 'var')
 logger.info('Using VAR_ROOT %(VAR_ROOT)r', locals())
 
 try:
+    # 3rd party:
     import subprocess32 as subprocess
 except ImportError:
     logger.warning("Can't import subprocess32")
+    # Standard library:
     import subprocess
 call = subprocess.call
 
@@ -49,10 +61,16 @@ lot_kwargs = {'logger': logger,
               'trace': 1,
               }
 
+# Local imports:
 # interfaces are not yet really used:
-from .interfaces import (IDedicatedThumbnail, IThumbnailFromText,
-	IThumbnailFromFirstImage, IThumbnailFromPage,
-	)
+from .interfaces import (
+    IDedicatedThumbnail,
+    IThumbnail,
+    IThumbnailFromFirstImage,
+    IThumbnailFromPage,
+    IThumbnailFromText,
+    )
+
 
 # ----------------------------- [ Katalog-Metadaten: getThumbnailPath ... [
 class ThumbnailMixin:  # ------------------------------------------ [[
@@ -67,6 +85,7 @@ class ThumbnailMixin:  # ------------------------------------------ [[
     - Etwa benötigte Datenfelder (image, text ...) werden von dieser
       Mixin-Klasse (noch?) *nicht* erledigt!
     """
+    implements(IThumbnail)
     # --------------------------------------------- [ Daten ... [
     # Wenn geändert, müssen ggf. die Metadaten "getThumbnailPath" neu
     # erzeugt werden; um Vorschaubilder neu zu erzeugen, ohne daß sich die
@@ -132,7 +151,7 @@ class ThumbnailMixin:  # ------------------------------------------ [[
                              ' (proceeding anyway)')
                 logger.exception(e)
 
-            scale_to_size = map(int, self.THUMBNAIL_SCALING.split('x'))
+            scale_to_size = list(map(int, self.THUMBNAIL_SCALING.split('x')))
             fs_mtime = get_mtime(filename)
             if fs_mtime is None:
                 logger.info('%(self)r.getThumbnailPath: no image %(filename)r yet', locals())
@@ -260,6 +279,7 @@ class ThumbnailMixin:  # ------------------------------------------ [[
                 return None
             done_uids.add(uid)
 
+        from pdb import set_trace; set_trace()
         val = self._getPathOfNewOrExistingThumbnail(uid)  # --> IDedicatedThumbnail
         if val:
             return val
@@ -277,10 +297,10 @@ class ThumbnailMixin:  # ------------------------------------------ [[
                 dic = method()
                 if dic is None:
                     continue
-                if isinstance(dic, basestring):
+                if isinstance(dic, six_string_types):
                     return dic
                 if dic:
-                    assert dic.keys() == ['uid']
+                    assert list(dic.keys()) == ['uid']
                     if portal_catalog is None:
                         portal_catalog = getToolByName(self, 'portal_catalog')
                     brains = portal_catalog({'UID': dic['uid']})

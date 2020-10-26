@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 """Setup tests for this package."""
-from plone import api
-from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
-from visaplan.plone.staticthumbnails.testing import VISAPLAN_PLONE_STATICTHUMBNAILS_INTEGRATION_TESTING  # noqa
+# Python compatibility:
+from __future__ import absolute_import
 
+# Standard library:
 import unittest
+
+# Plone:
+from plone import api
+from plone.app.testing import TEST_USER_ID, setRoles
+
+# visaplan:
+from visaplan.plone.staticthumbnails.testing import \
+    VISAPLAN_PLONE_STATICTHUMBNAILS_INTEGRATION_TESTING  # noqa
 
 
 class TestSetup(unittest.TestCase):
@@ -25,9 +32,13 @@ class TestSetup(unittest.TestCase):
 
     def test_browserlayer(self):
         """Test that IVisaplanPloneStaticthumbnailsLayer is registered."""
-        from visaplan.plone.staticthumbnails.interfaces import (
-            IVisaplanPloneStaticthumbnailsLayer)
+        # Plone:
         from plone.browserlayer import utils
+
+        # visaplan:
+        from visaplan.plone.staticthumbnails.interfaces import (
+            IVisaplanPloneStaticthumbnailsLayer,
+            )
         self.assertIn(
             IVisaplanPloneStaticthumbnailsLayer,
             utils.registered_layers())
@@ -52,9 +63,13 @@ class TestUninstall(unittest.TestCase):
 
     def test_browserlayer_removed(self):
         """Test that IVisaplanPloneStaticthumbnailsLayer is removed."""
-        from visaplan.plone.staticthumbnails.interfaces import \
-            IVisaplanPloneStaticthumbnailsLayer
+        # Plone:
         from plone.browserlayer import utils
+
+        # visaplan:
+        from visaplan.plone.staticthumbnails.interfaces import (
+            IVisaplanPloneStaticthumbnailsLayer,
+            )
         self.assertNotIn(
             IVisaplanPloneStaticthumbnailsLayer,
             utils.registered_layers())
